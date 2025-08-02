@@ -1,10 +1,14 @@
-const TextWrapper = document.querySelector(".test-wrapper");
+const textWrapper = document.querySelector(".test-wrapper");
 const testArea= document.querySelector("#test-area");
-const originText = document.querySelector("#origin-text p").innerHTML;
+const originText = document.querySelector("#origin-text").innerText;
 const resetButton = document.querySelector("#reset");
 const theTimer = document.querySelector(".timer");
 
 timer = [0,0,0,0];
+
+var interval;
+var timerRunning = false;
+
 
 
 function leadingZero(time)
@@ -30,37 +34,45 @@ timer[2] = Math.floor(timer[3] - (timer[1] * 100) - (timer[0]*6000));
 }
 
 
-function spellCheck()
-{
-let textEntered = testArea.value;
-let originTextMatch = originText.substring(0, textEntered.length);
-if ( textEntered == originText) {
-TextWrapper.style.borderColor="#429890";
-} else {
-if (textEntered == originTextMatch) {
-    TextWrapper.style.borderColor="#65CCf3";
-} else { 
-    TextWrapper.style.borderColor="#E95D0F";
-}
-}
+function spellCheck() {
+let textEntered = testArea.value.replace(/\s+/g, ' ').trim();
+let originalNormalized = originText.replace(/\s+/g, ' ').trim();
+let originTextMatch = originalNormalized.substring(0, textEntered.length);
 
-console.log(textEntered);
+if (textEntered === originalNormalized) {
+    clearInterval(interval);
+    textWrapper.style.borderColor = "#429890";
+} else if (textEntered === originTextMatch) {
+    textWrapper.style.borderColor = "#ea00ff";
+} else {
+    textWrapper.style.borderColor = "#E95D0F";
+}
 }
 
 function start()
 {
 let textEnteredLength = testArea.value.length;
-if(textEnteredLength === 0)
+if(textEnteredLength === 0 && !timerRunning)
 {
-setInterval(runTimer,10);
+timerRunning=true;
+interval = setInterval(runTimer,10);
 }
 console.log(textEnteredLength);
 }
 
 
+
 function reset()
 {
-console.log("Reset button was pressed");
+clearInterval(interval);
+interval = null ; 
+timer = [0,0,0,0];
+timerRunning=false;
+
+testArea.value="";
+theTimer.innerHTML="00:00:00";
+textWrapper.style.borderColor="grey";
+
 }
 
 testArea.addEventListener("keypress", start,false);
