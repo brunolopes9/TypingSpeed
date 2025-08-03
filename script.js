@@ -75,6 +75,6 @@ textWrapper.style.borderColor="grey";
 
 }
 
-testArea.addEventListener("input", start, false);
+testArea.addEventListener("keydown", start, false);
 testArea.addEventListener("keyup",spellCheck,false);
 resetButton.addEventListener("click",reset,false);
